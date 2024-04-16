@@ -1,5 +1,5 @@
 import getCollmexData from './modules/get-collmex-data.js';
-import { parse } from 'csv-parse/sync';
+import parse from 'csv-parse/lib/sync';
 import sanitizeData from './modules/sanitize-data.js';
 import parseData from './modules/parse-data.js';
 import checkVersion from './modules/check-version.js';
