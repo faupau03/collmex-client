@@ -47,5 +47,6 @@
       "html"
     ],
     "report-dir": "./coverage"
-  }
+  },
+  "type": "module",
 }
