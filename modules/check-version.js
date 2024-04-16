@@ -1,12 +1,12 @@
-const { readFileSync } = require('fs')
-const path = require('path')
-const { spawnSync } = require('child_process')
+import { readFileSync } from 'fs'
+import path from 'path'
+import { spawnSync } from 'child_process'
 
-module.exports = () => {
+const checkVersion = () => {
   const pjson = JSON.parse(readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'))
   const pkgName = pjson.name
   const localVer = pjson.version
-   let npmData
+  let npmData
   if (process.platform === 'win32') {
     npmData = JSON.parse(spawnSync('npm.cmd', ['view', pkgName, '--json']).stdout.toString())
   } else {
@@ -18,9 +18,11 @@ module.exports = () => {
   }
 }
 
-function checkSum (ver) {
+function checkSum(ver) {
   // here we do a weighted check sum where major version has a weight of 100, minor has 10 and patch has 1. We disregard the beta/alpha flags as we probably won't be using them
   return ver
     .split('.')
     .reduce((acc, cur, i) => acc + (10 ** (2 - i)) * cur, 0)
 }
+
+export default checkVersion;

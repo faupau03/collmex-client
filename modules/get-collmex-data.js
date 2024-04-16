@@ -1,13 +1,14 @@
-const iconv = require('iconv-lite')
+import iconv from 'iconv-lite'
+import satzarten from './load-satzarten.js'
+import fetch from 'node-fetch'
 
-module.exports = function (opts) {
+export default function (opts) {
   const req = getRequestBody.bind(this)(opts)
   const login = `LOGIN;${this.User};${this.Password}\n`
   return makeRequest.bind(this)(login, req)
 }
 
 function getRequestBody (opts) {
-  const satzarten = require('./load-satzarten.js')()
   return opts.reduce((req, opt) => {
     const satz = JSON.parse(JSON.stringify(satzarten))[opt.Satzart]
     for (const prop in opt) {
@@ -23,7 +24,6 @@ function getRequestBody (opts) {
 }
 
 function makeRequest (login, req) {
-  const fetch = require('node-fetch')
   const postData = `${login}${req}`
   const init = {
     method: 'POST',
