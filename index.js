@@ -35,7 +35,7 @@ const checkVersion = require('./modules/check-version.js')
  * })
  */
 
-class Collmex {
+export default class Collmex {
   constructor (opts = {}) {
     this.User = opts.User || 'noname'
     this.Password = opts.Password || 'password'
@@ -82,5 +82,3 @@ class Collmex {
     return parseData(data)
   }
 }
-
-module.exports = opts => new Collmex(opts)
