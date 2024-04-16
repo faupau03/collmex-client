@@ -1,5 +1,5 @@
 import getCollmexData from './modules/get-collmex-data.js';
-import parseCSV from 'csv-parse/lib/sync';
+import { parse } from 'csv-parse/sync';
 import sanitizeData from './modules/sanitize-data.js';
 import parseData from './modules/parse-data.js';
 import checkVersion from './modules/check-version.js';
@@ -75,7 +75,7 @@ export default class Collmex {
     if (output === 'raw') {
       return data;
     }
-    data = parseCSV(data, { delimiter: ';', relax_column_count: true });
+    data = parse(data, { delimiter: ';', relax_column_count: true });
     data = sanitizeData(data);
     if (output === 'array') {
       return data;
