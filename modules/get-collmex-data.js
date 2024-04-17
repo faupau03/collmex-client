@@ -1,16 +1,21 @@
 import iconv from 'iconv-lite'
-import satzarten from './load-satzarten.js'
+import loadSatzarten from './load-satzarten.js'
 import fetch from 'node-fetch'
 
-export default function (opts) {
-  const req = getRequestBody.bind(this)(opts)
+export default async function (opts) {
+  const req = await getRequestBody.bind(this)(opts)
   const login = `LOGIN;${this.User};${this.Password}\n`
   return makeRequest.bind(this)(login, req)
 }
 
-function getRequestBody (opts) {
+async function getRequestBody (opts) {
+  const satzarten = await loadSatzarten();
   return opts.reduce((req, opt) => {
-    const satz = JSON.parse(JSON.stringify(satzarten))[opt.Satzart]
+    const satz = satzarten[opt.Satzart];
+    console.log(opt);
+    console.log(opt.Satzart);
+    console.log(satzarten[opt.Satzart]);
+    //console.log(JSON.stringify(satzarten));
     for (const prop in opt) {
       satz[prop] = opt[prop]
     }

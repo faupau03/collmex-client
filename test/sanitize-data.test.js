@@ -1,6 +1,6 @@
 /* eslint-env mocha */
-const assert = require('chai').assert
-const sanitizeData = require('../modules/sanitize-data.js')
+import { assert } from 'chai'
+import sanitizeData from '../modules/sanitize-data.js'
 
 describe('collmex sanitizeData module', function () {
   it('should parse ints', function () {

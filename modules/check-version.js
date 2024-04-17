@@ -1,9 +1,9 @@
 import { readFileSync } from 'fs'
 import path from 'path'
 import { spawnSync } from 'child_process'
+import pjson from '../package.json' assert { type: "json" };
 
 const checkVersion = () => {
-  const pjson = JSON.parse(readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'))
   const pkgName = pjson.name
   const localVer = pjson.version
   let npmData

@@ -1,10 +1,8 @@
-import getCollmexData from './modules/get-collmex-data.js';
-import parse from 'csv-parse/lib/sync';
-import sanitizeData from './modules/sanitize-data.js';
-import parseData from './modules/parse-data.js';
-import checkVersion from './modules/check-version.js';
-
-'use strict';
+import getCollmexData from './modules/get-collmex-data.js'
+import parse from 'csv-parse/lib/sync.js'
+import sanitizeData from './modules/sanitize-data.js'
+import parseData from './modules/parse-data.js'
+import checkVersion from './modules/check-version.js'
 
 /**
  * Options for the new Collmex client instanciation
@@ -38,13 +36,13 @@ import checkVersion from './modules/check-version.js';
 
 export default class Collmex {
   constructor (opts = {}) {
-    this.User = opts.User || 'noname';
-    this.Password = opts.Password || 'password';
-    this.CMXKundennummer = opts.CMXKundennummer || '112233';
-    this.Firma_Nr = opts.Firma_Nr || 1;
-    this.Systemname = opts.Systemname || 'collmex-client';
-    this.Output = opts.Output || 'object';
-    checkVersion();
+    this.User = opts.User || 'noname'
+    this.Password = opts.Password || 'password'
+    this.CMXKundennummer = opts.CMXKundennummer || '112233'
+    this.Firma_Nr = opts.Firma_Nr || 1
+    this.Systemname = opts.Systemname || 'collmex-client'
+    this.Output = opts.Output || 'object'
+    checkVersion()
   }
 
   /**
@@ -69,17 +67,17 @@ export default class Collmex {
 
   async get (opts, output = this.Output) {
     if (!Array.isArray(opts)) {
-      opts = [opts];
+      opts = [opts]
     }
-    let data = await getCollmexData.bind(this)(opts);
+    let data = await getCollmexData.bind(this)(opts)
     if (output === 'raw') {
-      return data;
+      return data
     }
-    data = parse(data, { delimiter: ';', relax_column_count: true });
-    data = sanitizeData(data);
+    data = parse(data, { delimiter: ';', relax_column_count: true })
+    data = sanitizeData(data)
     if (output === 'array') {
-      return data;
+      return data
     }
-    return parseData(data);
+    return await parseData(data)
   }
 }

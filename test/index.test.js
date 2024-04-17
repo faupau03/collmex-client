@@ -1,18 +1,37 @@
+import { assert } from 'chai';
+import invalidOptions from './data/options.invalid.json' assert { type: "json" };
+import defaultOptions from './data/options.default.json' assert { type: "json" };
+
+import Collmex from '../index.js';
+
+const loadOptions =  async() => {
+  try {
+    const { default: options} = await import('./data/options.json', { assert: { type: "json" }});
+    return options;
+  }
+  catch (e) {
+    console.log("error",e);
+    return defaultOptions;
+  }
+};
+
+const options = await loadOptions();
+
+const noOptsCollmex = new Collmex();
+const collmex = new Collmex(options);
+const invalidCollmex = new Collmex(invalidOptions);
+
+
 /* eslint-env mocha */
-const assert = require('chai').assert
-const fs = require('fs')
-const options = fs.existsSync(`${__dirname}/data/options.json`) ? require('./data/options.json') : process.env.INIT_CLIENT_OPTS ? JSON.parse(process.env.INIT_CLIENT_OPTS) : require('./data/options.default.json')
-const invalidOptions = require('./data/options.invalid.json')
-const noOptsCollmex = require('../')()
-const collmex = require('../')(options)
-const invalidCollmex = require('../')(invalidOptions)
 
 describe('collmex-client', function () {
   it('should have default options when no options are specified', function () {
     testOptions(noOptsCollmex)
   })
   it('should be able to get product data from collmex as array', async function () {
-    await collmex.get([{ Satzart: 'PRODUCT_GET', Produktnummer: options.Produktnummer }], 'array').then(testDataType('array'))
+    const res = await collmex.get([{ Satzart: 'PRODUCT_GET', Produktnummer: options.Produktnummer }], 'array')
+    console.log(res);
+    testDataType('array')(res);
   })
   it('should be able to get data in raw format', async function () {
     await collmex.get([{ Satzart: 'PRODUCT_GET', Produktnummer: options.Produktnummer }], 'raw').then(testDataType('raw'))
@@ -27,16 +46,23 @@ describe('collmex-client', function () {
     await invalidCollmex.get([{ Satzart: 'PRODUCT_GET', Produktnummer: options.Produktnummer }]).then(testErrorMsg)
   })
   it('should be able to get product groups', async function () {
-    await collmex.get({ Satzart: 'PRODUCT_GROUPS_GET' }).then(testResponseFields('PRDGRP'))
+    //await collmex.get({ Satzart: 'PRODUCT_GROUPS_GET' }).then(testResponseFields('PRDGRP'))
+    const res = await collmex.get({ Satzart: 'PRODUCT_GROUPS_GET' });
+    console.log(res);
+    testResponseFields('PRDGRP')(res);
   })
   it('should be able to get available stocks', async function () {
     await collmex.get({ Satzart: 'STOCK_AVAILABLE_GET', Produktnummer: options.Produktnummer }).then(testResponseFields('STOCK_AVAILABLE'))
   })
   it('should be able to get stocks', async function () {
-    await collmex.get({ Satzart: 'STOCK_GET', Produktnummer: options.Produktnummer }).then(testResponseFields('CMXSTK'))
+    const res = await collmex.get({ Satzart: 'STOCK_GET', Produktnummer: options.Produktnummer });
+    console.log(res);
+    testResponseFields('CMXSTK')(res);
   })
   it('should be able to get stock changes', async function () {
-    await collmex.get({ Satzart: 'STOCK_CHANGE_GET', Produktnummer: options.Produktnummer }).then(testResponseFields('STOCK_CHANGE'))
+    const res = await collmex.get({ Satzart: 'STOCK_CHANGE_GET', Produktnummer: options.Produktnummer });
+    console.log(res);
+    testResponseFields('STOCK_CHANGE')(res);
   })
   it('should be able to get sales orders', async function () {
     await collmex.get({ Satzart: 'SALES_ORDER_GET', Auftragsnummer: options.Auftragsnummer }).then(testResponseFields('CMXORD-2'))
@@ -51,10 +77,14 @@ describe('collmex-client', function () {
     await collmex.get({ Satzart: 'PURCHASE_ORDER_GET', Lieferantenauftragsnummer: options.Lieferantenauftragsnummer }).then(testResponseFields('CMXPOD'))
   })
   it('should be able to get customers', async function () {
-    await collmex.get({ Satzart: 'CUSTOMER_GET', Kunde_Nr: options.Kunde_Nr }).then(testResponseFields('CMXKND'))
+    const res = await collmex.get({ Satzart: 'CUSTOMER_GET', Kunde_Nr: options.Kunde_Nr });
+    console.log(res);
+    testResponseFields('CMXKND')(res);
   })
   it('should be able to get vendors', async function () {
-    await collmex.get({ Satzart: 'VENDOR_GET', Lieferanten_Nr: options.Lieferanten_Nr }).then(testResponseFields('CMXLIF'))
+    const res = await collmex.get({ Satzart: 'VENDOR_GET', Lieferanten_Nr: options.Lieferanten_Nr })
+    console.log(res);
+    testResponseFields('CMXLIF')(res);
   })
   it('should be able to get vendor agreements', async function () {
     await collmex.get({ Satzart: 'VENDOR_AGREEMENT_GET', Lieferant_Nr: options.Lieferanten_Nr }).then(testResponseFields('CMXVAG'))
