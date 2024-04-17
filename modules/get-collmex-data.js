@@ -12,10 +12,6 @@ async function getRequestBody (opts) {
   const satzarten = await loadSatzarten();
   return opts.reduce((req, opt) => {
     const satz = satzarten[opt.Satzart];
-    console.log(opt);
-    console.log(opt.Satzart);
-    console.log(satzarten[opt.Satzart]);
-    //console.log(JSON.stringify(satzarten));
     for (const prop in opt) {
       satz[prop] = opt[prop]
     }
